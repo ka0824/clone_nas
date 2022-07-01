@@ -8,7 +8,9 @@ const Wallpaper = () => {
 
   const renderIcons = useCallback(() => {
     return shortcutList.map((el) => {
-      return <Icon svg={el.icon} title={el.title} id={el.id}></Icon>;
+      return (
+        <Icon svg={el.icon} title={el.title} id={el.id} type="wallpaper"></Icon>
+      );
     });
   }, [shortcutList]);
 

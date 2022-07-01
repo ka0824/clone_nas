@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { removeShortcut } from "../../store/slice/shortcutSlice";
 
-const ContextMenu = ({ xPos, yPos, id, isOpen }) => {
+const ContextMenu = ({ xPos, yPos, id, isOpen, type }) => {
   const dispatch = useDispatch();
 
   const handleRemove = useCallback(() => {
@@ -11,10 +11,35 @@ const ContextMenu = ({ xPos, yPos, id, isOpen }) => {
     isOpen(false);
   }, []);
 
+  const renderItem = useCallback(() => {
+    switch (type) {
+      case "wallpaper":
+        return (
+          <>
+            <Item>새 창에서 열기</Item>
+            <Item onClick={handleRemove}>바로가기 제거</Item>
+          </>
+        );
+        break;
+
+      case "menu":
+        return (
+          <>
+            <Item>새 창에서 열기</Item>
+            <Item>바탕화면에 추가</Item>
+          </>
+        );
+        break;
+
+      default:
+        return null;
+        break;
+    }
+  }, []);
+
   return (
     <Wrapper xPos={xPos} yPos={yPos}>
-      <Item>새 창에서 열기</Item>
-      <Item onClick={handleRemove}>바로가기 제거</Item>
+      {renderItem()}
     </Wrapper>
   );
 };

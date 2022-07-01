@@ -3,7 +3,7 @@ import { FcFolder } from "react-icons/fc";
 import styled from "styled-components";
 import ContextMenu from "../menu/ContextMenu";
 
-const Icon = ({ svg = <FcFolder />, title, id }) => {
+const Icon = ({ svg = <FcFolder />, title, id, type }) => {
   const [isContextOpen, setIsContextOpen] = useState(false);
   const [menuxPos, setMenuxPos] = useState(0);
   const [menuyPos, setMenuyPos] = useState(0);
@@ -56,6 +56,7 @@ const Icon = ({ svg = <FcFolder />, title, id }) => {
           yPos={menuyPos}
           id={id}
           isOpen={setIsContextOpen}
+          type={type}
         ></ContextMenu>
       ) : null}
       {svg}

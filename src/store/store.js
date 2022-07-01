@@ -4,12 +4,16 @@ import shortcutReducer from "./slice/shortcutSlice";
 import menuReducer from "./slice/menuSlice";
 
 const store = configureStore({
-  reducer: { login: loginReducer, shortcut: shortcutReducer },
+  reducer: {
+    login: loginReducer,
+    shortcut: shortcutReducer,
+    menu: menuReducer,
+  },
   devTools: true,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredPaths: ["shortcut"],
+        ignoredPaths: ["shortcut", "menu"],
       },
     }),
 });
