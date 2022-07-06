@@ -1,14 +1,19 @@
-import React, { useCallback, useState, useEffect, useRef, memo } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import { FcFolder } from "react-icons/fc";
 import styled from "styled-components";
-import ContextMenu from "../menu/ContextMenu";
 import DragIcon from "../drag/DragIcon";
-import { useSelector, useDispatch } from "react-redux";
-import { addModal } from "../../store/slice/ModalSlice";
-import uuid from "react-uuid";
-import ModalTemplate from "./../modal/ModalTemplate";
+import ContextMenu from "../menu/ContextMenu";
+import { addShortcut } from "../../store/slice/shortcutSlice";
+import { useDispatch } from "react-redux";
 
-const Icon = ({ svg = <FcFolder />, title, id, type }) => {
+const MenuIcon = ({
+  svg = <FcFolder />,
+  title,
+  id,
+  type,
+  setIsListOpen,
+  searchRef,
+}) => {
   const [isContextOpen, setIsContextOpen] = useState(false);
   const [menuxPos, setMenuxPos] = useState(0);
   const [menuyPos, setMenuyPos] = useState(0);
@@ -17,10 +22,9 @@ const Icon = ({ svg = <FcFolder />, title, id, type }) => {
   const [isDrag, setIsDrag] = useState(false);
   const [currentxPos, setCurrentxPos] = useState(0);
   const [currentyPos, setCurrentyPos] = useState(0);
-  const modalCnt = useSelector((state) => state.modal.modalCnt);
-  const dispatch = useDispatch();
 
   const iconRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     document.addEventListener("mousedown", handleOutsideClick);
@@ -38,8 +42,15 @@ const Icon = ({ svg = <FcFolder />, title, id, type }) => {
   }, []);
 
   const handleOutsideClick = (e) => {
+    if (searchRef.current.contains(e.target)) {
+      return;
+    }
+
     if (isContextOpen && !iconRef.current.contains(e.target)) {
       setIsContextOpen(false);
+    } else if (!e.target.closest(".menu-icon")) {
+      setIsContextOpen(false);
+      setIsListOpen(false);
     }
   };
 
@@ -49,7 +60,6 @@ const Icon = ({ svg = <FcFolder />, title, id, type }) => {
   };
 
   const handleDragStart = (e) => {
-    e.stopPropagation();
     const img = new Image();
     e.dataTransfer.setDragImage(img, 0, 0);
     setIsDrag(true);
@@ -58,47 +68,29 @@ const Icon = ({ svg = <FcFolder />, title, id, type }) => {
   };
 
   const handleDrag = (e) => {
-    e.stopPropagation();
+    if (e.clientX === 0 && e.clientY === 0) {
+      return;
+    }
+
     setCurrentxPos(e.clientX);
     setCurrentyPos(e.clientY);
   };
 
   const handleDragEnd = (e) => {
-    e.stopPropagation();
+    dispatch(addShortcut({ icon: svg, title: title }));
     setIsDrag(false);
-  };
-
-  const handleClick = (e) => {
-    const id = uuid();
-
-    dispatch(
-      addModal({
-        id: id,
-        component: (
-          <ModalTemplate
-            id={id}
-            icon={svg}
-            title={title}
-            modalCnt={modalCnt}
-          ></ModalTemplate>
-        ),
-        icon: svg,
-      })
-    );
   };
 
   return (
     <Wrapper
-      data-id={`${id}`}
       onContextMenu={handleRightClick}
       ref={iconRef}
       onMouseOver={handleMouseOver}
+      className="menu-icon"
       onDragStart={handleDragStart}
       onDrag={handleDrag}
       onDragEnd={handleDragEnd}
-      className="wallpaper-icon"
       draggable
-      onClick={handleClick}
     >
       <Tooltip xPos={tooltipxPos} yPos={tooltipyPos}>
         {title}
@@ -118,6 +110,8 @@ const Icon = ({ svg = <FcFolder />, title, id, type }) => {
           id={id}
           isOpen={setIsContextOpen}
           type={type}
+          svg={svg}
+          title={title}
         ></ContextMenu>
       ) : null}
       {svg}
@@ -134,9 +128,6 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
 
   svg {
     width: 70px;
@@ -183,4 +174,4 @@ const Tooltip = styled.div`
   }};
 `;
 
-export default Icon;
+export default MenuIcon;

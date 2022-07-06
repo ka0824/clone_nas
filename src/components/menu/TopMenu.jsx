@@ -16,6 +16,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  ${({ theme }) => theme.mountEvent};
 `;
 
 export default TopMenu;

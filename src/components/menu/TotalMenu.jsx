@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { FaShapes } from "react-icons/fa";
 import MenuList from "./MenuList";
+import ModalList from "./../modal/ModalList";
 
 const TotalMenu = () => {
   const [isListOpen, setIsListOpen] = useState(false);
@@ -12,11 +13,12 @@ const TotalMenu = () => {
 
   return (
     <Wrapper>
-      {isListOpen ? <MenuList></MenuList> : null}
+      {isListOpen ? <MenuList setIsListOpen={setIsListOpen}></MenuList> : null}
       <Escape></Escape>
       <ShowAll onClick={handleMenuOpen}>
         <FaShapes></FaShapes>
       </ShowAll>
+      <ModalList></ModalList>
     </Wrapper>
   );
 };

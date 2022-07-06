@@ -1,13 +1,32 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { removeShortcut } from "../../store/slice/shortcutSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addShortcut,
+  removeMultiShortcut,
+  removeShortcut,
+} from "../../store/slice/shortcutSlice";
 
-const ContextMenu = ({ xPos, yPos, id, isOpen, type }) => {
+const ContextMenu = ({ xPos, yPos, id, isOpen, type, svg, title }) => {
   const dispatch = useDispatch();
+  const dragSelect = useSelector((state) => state.dragSelect);
 
   const handleRemove = useCallback(() => {
-    dispatch(removeShortcut(id));
+    if (dragSelect.length !== 0) {
+      dispatch(removeMultiShortcut(dragSelect));
+    } else {
+      dispatch(removeShortcut(id));
+    }
+
+    isOpen(false);
+  }, []);
+
+  const openNewWindow = useCallback(() => {
+    isOpen(false);
+  }, []);
+
+  const handleAddShortcut = useCallback(() => {
+    dispatch(addShortcut({ icon: svg, title: title }));
     isOpen(false);
   }, []);
 
@@ -16,7 +35,7 @@ const ContextMenu = ({ xPos, yPos, id, isOpen, type }) => {
       case "wallpaper":
         return (
           <>
-            <Item>새 창에서 열기</Item>
+            <Item onClick={openNewWindow}>새 창에서 열기</Item>
             <Item onClick={handleRemove}>바로가기 제거</Item>
           </>
         );
@@ -25,8 +44,8 @@ const ContextMenu = ({ xPos, yPos, id, isOpen, type }) => {
       case "menu":
         return (
           <>
-            <Item>새 창에서 열기</Item>
-            <Item>바탕화면에 추가</Item>
+            <Item onClick={openNewWindow}>새 창에서 열기</Item>
+            <Item onClick={handleAddShortcut}>바탕화면에 추가</Item>
           </>
         );
         break;

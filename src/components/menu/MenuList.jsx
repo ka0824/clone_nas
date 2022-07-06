@@ -1,12 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { RiSearchLine } from "react-icons/ri";
-import Icon from "../icons/Icon";
+import MenuIcon from "./../icons/MenuIcon";
 
-const MenuList = () => {
+const MenuList = ({ setIsListOpen }) => {
   const menuList = useSelector((state) => state.menu);
   const [searchInput, setSearchInput] = useState("");
+  const searchRef = useRef(null);
 
   const handleInput = useCallback((e) => {
     setSearchInput(e.target.value);
@@ -15,7 +16,14 @@ const MenuList = () => {
   const renderMenus = useCallback(() => {
     return filterSearch().map((el) => {
       return (
-        <Icon id={el.id} title={el.title} icon={el.icon} type="menu"></Icon>
+        <MenuIcon
+          id={el.id}
+          title={el.title}
+          svg={el.icon}
+          type="menu"
+          setIsListOpen={setIsListOpen}
+          searchRef={searchRef}
+        ></MenuIcon>
       );
     });
   }, [menuList, searchInput]);
@@ -26,7 +34,8 @@ const MenuList = () => {
 
   return (
     <Wrapper>
-      <Search>
+      <GrayScale></GrayScale>
+      <Search ref={searchRef}>
         <RiSearchLine></RiSearchLine>
         <input placeholder="검색" onChange={handleInput}></input>
       </Search>
@@ -53,9 +62,19 @@ const Wrapper = styled.div`
   z-index: 800;
 
   margin-left: -15px;
-  background-image: url(https://images.pexels.com/photos/3312671/pexels-photo-3312671.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+  background-image: url(https://images.pexels.com/photos/3293148/pexels-photo-3293148.jpeg);
   background-size: cover;
   backdrop-filter: grayscale(80%);
+  overflow: hidden;
+`;
+
+const GrayScale = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+  background: white;
+  opacity: 0.5;
 `;
 
 const Search = styled.div`
@@ -96,6 +115,9 @@ const ListWrapper = styled.div`
   width: 80%;
   height: 85%;
   animation: ${mountEvent} 0.4s;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
 `;
 
 export default MenuList;
