@@ -31,6 +31,8 @@ const ModalTemplate = ({ id, icon, title, modalCnt }) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const posX = useRef(0);
   const posY = useRef(0);
+  const prevWidth = useRef(1010);
+  const prevHeight = useRef(600);
   const dispatch = useDispatch();
   const wrapperRef = useRef(null);
   const visibility = useSelector(
@@ -40,6 +42,7 @@ const ModalTemplate = ({ id, icon, title, modalCnt }) => {
   const zIndex = useSelector(
     (state) => state.modal.zIndexList.filter((el) => el.id === id)[0].zIndex
   );
+  const [isResize, setIsResize] = useState(false);
 
   const handleClose = (e) => {
     e.stopPropagation();
@@ -64,6 +67,7 @@ const ModalTemplate = ({ id, icon, title, modalCnt }) => {
 
   const handleDragStart = (event) => {
     event.stopPropagation();
+
     const img = new Image();
     event.dataTransfer.setDragImage(img, 0, 0);
     if (isFullScreen) {
@@ -74,6 +78,8 @@ const ModalTemplate = ({ id, icon, title, modalCnt }) => {
     posX.current = event.nativeEvent.offsetX;
 
     posY.current = event.nativeEvent.offsetY;
+
+    return false;
   };
 
   const handleDrag = (event) => {
@@ -100,205 +106,231 @@ const ModalTemplate = ({ id, icon, title, modalCnt }) => {
     dispatch(changeHidden(id));
   };
 
-  const handleWrapperDragStart = (e) => {
+  const handleWrapperStart = (e) => {
+    console.log("start");
+
     const img = new Image();
     e.dataTransfer.setDragImage(img, 0, 0);
 
     posX.current = e.nativeEvent.offsetX;
 
     posY.current = e.nativeEvent.offsetY;
+
+    prevWidth.current = size.width;
+    prevHeight.current = size.height;
   };
 
-  const handleWrapperDrag = (e) => {
-    console.log(
-      wrapperRef.current.offsetHeight +
-        wrapperRef.current.getBoundingClientRect().top -
-        posY.current
-    );
-
+  const handleResize = (e, posX, posY, prevWidth, prevHeight) => {
+    console.log([
+      e,
+      posX.current,
+      posY.current,
+      prevHeight.current,
+      prevWidth.current,
+    ]);
     // e.stopImmediatePropagation();
     if (e.clientX === 0 && e.clientY === 0) {
       return;
     }
-
     if (e.clientX === 0) {
       return;
     }
-
+    console.log([posX.current, prevHeight.current]);
     if (
-      wrapperRef.current.offsetWidth +
-        wrapperRef.current.getBoundingClientRect().left -
-        posX.current <
-        20 &&
-      wrapperRef.current.offsetHeight +
-        wrapperRef.current.getBoundingClientRect().top -
-        posY.current <
-        20
+      prevWidth.current - posX.current < 10 &&
+      prevHeight.current - posY.current < 10
     ) {
-      console.log("A");
+      handleRightBottomSpace(e);
+    } else if (posX.current < 10 && prevHeight.current - posY.current < 10) {
+      handleLeftBottomSpace(e);
+    } else if (posX.current < 10 && posY.current < 10) {
+      handleLeftTopSpace(e);
+    } else if (prevWidth.current - posX.current < 10 && posY.current < 10) {
+      handleRightTopSpace(e);
+    } else if (prevWidth.current - posX.current < 10) {
       handleRightSpace(e);
+    } else if (prevHeight.current - posY.current < 10) {
       handleBottomSpace(e);
-    } else if (
-      posX.current - wrapperRef.current.getBoundingClientRect().left < 20 &&
-      wrapperRef.current.offsetHeight +
-        wrapperRef.current.getBoundingClientRect().top -
-        posY.current <
-        20
-    ) {
-      console.log("B");
+    } else if (posX.current < 10) {
       handleLeftSpace(e);
-      handleBottomSpace(e);
-    } else if (
-      wrapperRef.current.offsetWidth +
-        wrapperRef.current.getBoundingClientRect().left -
-        posX.current <
-      20
-    ) {
-      console.log("C");
-      handleRightSpace(e);
-    } else if (
-      wrapperRef.current.offsetHeight +
-        wrapperRef.current.getBoundingClientRect().top -
-        posY.current <
-      20
-    ) {
-      console.log("D");
-      handleBottomSpace(e);
-    } else if (
-      posX.current - wrapperRef.current.getBoundingClientRect().left <
-      20
-    ) {
-      console.log("E");
-      handleLeftSpace(e);
+    } else if (posY.current < 10) {
+      handleTopSpace(e);
     }
   };
 
-  const handleWrapperDragEnd = (e) => {
+  const handleWrapperDrag = (e) => {
+    console.log("drag");
+    // e.stopImmediatePropagation();
+    if (e.clientX === 0 && e.clientY === 0) {
+      return;
+    }
+    if (e.clientX === 0) {
+      return;
+    }
+    console.log("hi");
+    if (
+      prevWidth.current - posX.current < 10 &&
+      prevHeight.current - posY.current < 10
+    ) {
+      handleRightBottomSpace(e);
+    } else if (posX.current < 10 && prevHeight.current - posY.current < 10) {
+      handleLeftBottomSpace(e);
+    } else if (posX.current < 10 && posY.current < 10) {
+      handleLeftTopSpace(e);
+    } else if (prevWidth.current - posX.current < 10 && posY.current < 10) {
+      handleRightTopSpace(e);
+    } else if (prevWidth.current - posX.current < 10) {
+      handleRightSpace(e);
+    } else if (prevHeight.current - posY.current < 10) {
+      handleBottomSpace(e);
+    } else if (posX.current < 10) {
+      handleLeftSpace(e);
+    } else if (posY.current < 10) {
+      handleTopSpace(e);
+    }
+  };
+
+  const handleWrapperEnd = (e) => {
+    console.log("end");
+
     // e.stopImmediatePropagation();
   };
 
   const handleRightSpace = (e) => {
-    if (
-      e.clientX >=
-        wrapperRef.current.offsetWidth +
-          wrapperRef.current.getBoundingClientRect().left &&
-      e.clientX >= wrapperRef.current.getBoundingClientRect().left
-    ) {
-      setSize({
-        ...size,
-        width:
-          size.width +
-          (e.clientX -
-            (wrapperRef.current.getBoundingClientRect().left + size.width)),
-      });
-    } else if (
-      e.clientX <
-        wrapperRef.current.offsetWidth +
-          wrapperRef.current.getBoundingClientRect().left &&
-      e.clientX >
-        wrapperRef.current.getBoundingClientRect().left +
-          wrapperRef.current.offsetWidth / 2
-    ) {
-      const newWidth =
-        size.width -
-        Math.abs(
-          e.clientX -
-            (wrapperRef.current.getBoundingClientRect().left + size.width)
-        );
+    const newWidth =
+      e.clientX - wrapperRef.current.getBoundingClientRect().left;
 
-      setSize({
-        ...size,
-        width: newWidth < 1010 ? 1010 : newWidth,
-      });
-    }
+    setSize({
+      ...size,
+      width: newWidth < 1010 ? 1010 : newWidth,
+    });
   };
 
   const handleLeftSpace = (e) => {
-    if (e.clientX < wrapperRef.current.getBoundingClientRect().left) {
-      setSize({
-        ...size,
-        width:
-          size.width +
-          (wrapperRef.current.getBoundingClientRect().left - e.clientX),
-      });
+    const newWidth =
+      wrapperRef.current.getBoundingClientRect().left +
+      wrapperRef.current.offsetWidth -
+      e.clientX;
+    setSize({
+      ...size,
+      width: newWidth < 1010 ? 1010 : newWidth,
+    });
 
-      setLeftSpace(`${e.clientX}px`);
-      size.width +
-        (wrapperRef.current.getBoundingClientRect().left - e.clientX);
-    } else if (
-      e.clientX > wrapperRef.current.getBoundingClientRect().left &&
-      e.clientX <
-        wrapperRef.current.getBoundingClientRect().left +
-          wrapperRef.current.offsetWidth / 2
-    ) {
-      const newWidth =
-        size.width -
-        Math.abs(wrapperRef.current.getBoundingClientRect().left - e.clientX);
-      setSize({
-        ...size,
-        width: newWidth < 1010 ? 1010 : newWidth,
-      });
-
-      if (newWidth < 1010) {
-        return;
-      }
-
-      setLeftSpace(`${e.clientX}px`);
+    if (newWidth < 1010) {
+      return;
     }
+
+    setLeftSpace(`${e.clientX}px`);
   };
 
   const handleTopSpace = (e) => {
-    if (e.clientY < wrapperRef.current.getBoundingClientRect().top) {
-      setSize({
-        ...size,
-        height:
-          size.height +
-          (wrapperRef.current.getBoundingClientRect().top - e.clientY),
-      });
-    } else if (
-      e.clientY > wrapperRef.current.getBoundingClientRect().top &&
-      e.clientY <
-        wrapperRef.current.getBoundingClientRect().top +
-          wrapperRef.current.offsetHeight / 2
-    ) {
-      const newHeight =
-        size.height -
-        Math.abs(e.clientY - wrapperRef.current.getBoundingClientRect().top);
-      setSize({
-        ...size,
-        height: newHeight < 600 ? 600 : newHeight,
-      });
+    const newHeight =
+      wrapperRef.current.getBoundingClientRect().top +
+      wrapperRef.current.offsetHeight -
+      e.clientY;
+
+    setSize({
+      ...size,
+      height: newHeight < 600 ? 600 : newHeight,
+    });
+
+    if (newHeight < 600) {
+      return;
     }
+
+    setTopSpace(`${e.clientY}px`);
   };
 
   const handleBottomSpace = (e) => {
-    if (
-      e.clientY >
-      wrapperRef.current.getBoundingClientRect().top +
-        wrapperRef.current.offsetHeight
-    ) {
-      setSize({
-        ...size,
-        height:
-          size.height +
-          (e.clientY -
-            (wrapperRef.current.getBoundingClientRect().top +
-              wrapperRef.current.offsetHeight)),
-      });
-    } else if (
-      e.clientY > wrapperRef.current.getBoundingClientRect().top &&
-      e.clientY <
-        wrapperRef.current.getBoundingClientRect().top +
-          wrapperRef.current.offsetHeight / 2
-    ) {
-      const newHeight =
-        height -
-        Math.abs(e.clientY - wrapperRef.current.getBoundingClientRect().top);
-      setSize({
-        ...size,
-        height: newHeight < 600 ? 600 : newHeight,
-      });
+    const newHeight =
+      e.clientY - wrapperRef.current.getBoundingClientRect().top;
+
+    setSize({
+      ...size,
+      height: newHeight < 600 ? 600 : newHeight,
+    });
+  };
+
+  const handleLeftBottomSpace = (e) => {
+    const newHeight =
+      e.clientY - wrapperRef.current.getBoundingClientRect().top;
+
+    const newWidth =
+      wrapperRef.current.getBoundingClientRect().left +
+      wrapperRef.current.offsetWidth -
+      e.clientX;
+
+    setSize({
+      width: newWidth < 1010 ? 1010 : newWidth,
+      height: newHeight < 600 ? 600 : newHeight,
+    });
+
+    if (newWidth < 1010) {
+      return;
     }
+
+    setLeftSpace(`${e.clientX}px`);
+  };
+
+  const handleRightBottomSpace = (e) => {
+    const newWidth =
+      e.clientX - wrapperRef.current.getBoundingClientRect().left;
+
+    const newHeight =
+      e.clientY - wrapperRef.current.getBoundingClientRect().top;
+
+    setSize({
+      height: newHeight < 600 ? 600 : newHeight,
+      width: newWidth < 1010 ? 1010 : newWidth,
+    });
+  };
+
+  const handleLeftTopSpace = (e) => {
+    const newHeight =
+      wrapperRef.current.getBoundingClientRect().top +
+      wrapperRef.current.offsetHeight -
+      e.clientY;
+    const newWidth =
+      wrapperRef.current.getBoundingClientRect().left +
+      wrapperRef.current.offsetWidth -
+      e.clientX;
+
+    setSize({
+      height: newHeight < 600 ? 600 : newHeight,
+      width: newWidth < 1010 ? 1010 : newWidth,
+    });
+
+    if (newHeight < 600) {
+      return;
+    }
+
+    setTopSpace(`${e.clientY}px`);
+
+    if (newWidth < 1010) {
+      return;
+    }
+
+    setLeftSpace(`${e.clientX}px`);
+  };
+
+  const handleRightTopSpace = (e) => {
+    const newHeight =
+      wrapperRef.current.getBoundingClientRect().top +
+      wrapperRef.current.offsetHeight -
+      e.clientY;
+    const newWidth =
+      e.clientX - wrapperRef.current.getBoundingClientRect().left;
+
+    setSize({
+      height: newHeight < 600 ? 600 : newHeight,
+      width: newWidth < 1010 ? 1010 : newWidth,
+    });
+
+    if (newHeight < 600) {
+      return;
+    }
+
+    setTopSpace(`${e.clientY}px`);
   };
 
   return (
@@ -311,16 +343,36 @@ const ModalTemplate = ({ id, icon, title, modalCnt }) => {
       visibility={visibility}
       size={size}
       isFullScreen={isFullScreen}
-      draggable
-      onDragStart={handleWrapperDragStart}
+      onDragStart={handleWrapperStart}
       onDrag={handleWrapperDrag}
-      onDragEnd={handleWrapperDragEnd}
+      onDragEnd={handleWrapperEnd}
       ref={wrapperRef}
       topSpace={topSpace}
       rightSpace={rightSpace}
       leftSpace={leftSpace}
       bottomSpace={bottomSpace}
+      onTouchMove={() => console.log("touch")}
+      draggable
     >
+      <LeftSizeTag></LeftSizeTag>
+
+      <BottomSizeTag
+        width={wrapperRef.current?.offsetWidth}
+        height={wrapperRef.current?.offsetHeight}
+      ></BottomSizeTag>
+
+      <RightSizeTag width={wrapperRef.current?.offsetWidth}></RightSizeTag>
+      <TopSizeTag width={wrapperRef.current?.offsetWidth}></TopSizeTag>
+
+      <RightBottomSizeTag
+        width={wrapperRef.current?.offsetWidth}
+        height={wrapperRef.current?.offsetHeight}
+      ></RightBottomSizeTag>
+      <LeftBottomSizeTag
+        height={wrapperRef.current?.offsetHeight}
+      ></LeftBottomSizeTag>
+      <LeftTopSize></LeftTopSize>
+      <RightTopSize width={wrapperRef.current?.offsetWidth}></RightTopSize>
       <TopBar
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
@@ -471,6 +523,10 @@ const TopBar = styled.div`
   justify-content: space-between;
   padding: 5px 10px;
   border-bottom: 1.5px solid #eee;
+
+  :hover {
+    cursor: move;
+  }
 `;
 
 const Title = styled.div`
@@ -704,6 +760,138 @@ const RefreshInfo = styled.div`
       cursor: pointer;
     }
   }
+`;
+
+const LeftSizeTag = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 100%;
+
+  :hover {
+    cursor: ew-resize;
+  }
+  &:disabled {
+    cursor: ew-resize;
+  }
+`;
+
+const LeftBottomSizeTag = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin-top: auto;
+  top: ${({ top, height }) => {
+    return `${height - 10}px`;
+  }};
+
+  :hover {
+    cursor: nesw-resize;
+  }
+`;
+
+const BottomSizeTag = styled.div`
+  position: absolute;
+  height: 10px;
+
+  ${({ width, height }) => {
+    return css`
+      width: ${width}px;
+      top: ${height - 10}px;
+    `;
+  }};
+
+  :hover {
+    cursor: ns-resize;
+  }
+`;
+
+const RightBottomSizeTag = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+
+  ${({ width, height }) => {
+    return css`
+      left: ${width - 10}px;
+      top: ${height - 10}px;
+    `;
+  }}
+
+  :hover {
+    cursor: nwse-resize;
+  }
+`;
+
+const RightSizeTag = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 100%;
+
+  ${({ width }) => {
+    return css`
+      left: ${width - 10}px;
+    `;
+  }};
+
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+  :hover {
+    cursor: ew-resize !important;
+  }
+
+  :active {
+    cursor: pointer !important;
+  }
+  :focus {
+    cursor: pointer !important;
+  }
+`;
+
+const TopSizeTag = styled.div`
+  position: absolute;
+  height: 10px;
+  ${({ width }) => {
+    return css`
+      width: ${width}px;
+    `;
+  }};
+
+  :hover {
+    cursor: ns-resize;
+  }
+`;
+
+const LeftTopSize = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+
+  :hover {
+    cursor: nwse-resize;
+  }
+`;
+
+const RightTopSize = styled.div`
+  position: absolute;
+  width: 10px;
+  height: 10px;
+
+  :hover {
+    cursor: nesw-resize;
+  }
+
+  :hover:active {
+    cursor: nesw-resize;
+  }
+
+  ${({ width }) => {
+    return css`
+      left: ${width - 10}px;
+    `;
+  }};
 `;
 
 export default memo(ModalTemplate);

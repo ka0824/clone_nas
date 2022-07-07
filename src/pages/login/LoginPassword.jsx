@@ -11,6 +11,8 @@ import { RiUser3Fill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import LoginInput from "./../../components/input/LoginInput";
 import LoginButton from "./../../components/button/LoginButton";
+import axios from "axios";
+import { IoConstructOutline } from "react-icons/io5";
 
 const LoginPassword = () => {
   const dispatch = useDispatch();
@@ -31,14 +33,23 @@ const LoginPassword = () => {
     [inputPassword]
   );
 
-  const handlePasswordButton = useCallback(() => {
+  const handlePasswordButton = useCallback(async () => {
     dispatch(submitPassword());
 
     if (inputPassword.length === 0) {
       return;
     }
-    setIsUnmount(true);
-  }, [isSubmitPassword, inputPassword]);
+
+    const result = await axios.get(
+      `http://localhost:4000/login?id=${inputId}&password=${inputPassword}`
+    );
+
+    if (result.data.length === 0) {
+      return;
+    } else {
+      setIsUnmount(true);
+    }
+  }, [isSubmitPassword, inputPassword, inputId]);
 
   useEffect(() => {
     if (isUnmount) {
@@ -73,6 +84,7 @@ const LoginPassword = () => {
         handleEnter={handleEnter}
         type="password"
       ></LoginInput>
+      <Alert>계정 또는 패스워드가 맞지 않습니다. 다시 시도하십시오.</Alert>
       <UnmountEvent isUnmount={isUnmount}></UnmountEvent>
       <LoginButton
         inputValue={inputPassword}
@@ -198,5 +210,7 @@ const PrevButton = styled.button`
     margin-right: 10px;
   }
 `;
+
+const Alert = styled.div``;
 
 export default LoginPassword;
