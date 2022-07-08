@@ -3,6 +3,116 @@
     {
       "id": "test",
       "password": "1234"
+    },
+    {
+      "id": "admin",
+      "password": "1234"
+    },
+    {
+      "id": "beta",
+      "password": "1234"
+    }
+  ],
+
+  "shortcutList": [
+    {
+      "id": "test",
+      "list": [
+        {
+          "id": 0,
+          "type": "folder",
+          "title": "폴더"
+        },
+        {
+          "id": 1,
+          "type": "info",
+          "title": "테스트용 2"
+        },
+        {
+          "id": 2,
+          "type": "camera",
+          "title": "테스트용 3"
+        },
+        {
+          "id": 3,
+          "type": "explorer",
+          "title": "테스트용 4"
+        },
+        {
+          "id": 4,
+          "type": "key",
+          "title": "테스트용 5"
+        },
+        {
+          "id": 5,
+          "type": "linux",
+          "title": "테스트용 6"
+        },
+        {
+          "id": 6,
+          "type": "print",
+          "title": "테스트용 7"
+        },
+        {
+          "id": 7,
+          "type": "lock",
+          "title": "테스트용 8"
+        }
+      ]
+    },
+    {
+      "id": "admin",
+      "list": [
+        {
+          "id": 0,
+          "type": "info",
+          "title": "테스트용 1"
+        },
+
+        {
+          "id": 1,
+          "type": "explorer",
+          "title": "테스트용 2"
+        },
+        {
+          "id": 2,
+          "type": "key",
+          "title": "테스트용 3"
+        },
+
+        {
+          "id": 3,
+          "type": "lock",
+          "title": "테스트용 4"
+        }
+      ]
+    },
+    {
+      "id": "beta",
+      "list": [
+        {
+          "id": 0,
+          "type": "camera",
+          "title": "테스트용 1"
+        },
+
+        {
+          "id": 1,
+          "type": "key",
+          "title": "테스트용 2"
+        },
+        {
+          "id": 2,
+          "type": "unlock",
+          "title": "테스트용 3"
+        },
+
+        {
+          "id": 3,
+          "type": "linux",
+          "title": "테스트용 4"
+        }
+      ]
     }
   ]
 }

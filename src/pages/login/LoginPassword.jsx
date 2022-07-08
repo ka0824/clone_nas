@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import LoginInput from "./../../components/input/LoginInput";
 import LoginButton from "./../../components/button/LoginButton";
 import axios from "axios";
-import { IoConstructOutline } from "react-icons/io5";
 
 const LoginPassword = () => {
   const dispatch = useDispatch();
@@ -21,6 +20,8 @@ const LoginPassword = () => {
   const inputPassword = useSelector((state) => state.login.inputPassword);
   const isSubmitPassword = useSelector((state) => state.login.isSubmitPassword);
   const [isUnmount, setIsUnmount] = useState(false);
+  const alertRef = useRef(null);
+  const boxWrapper = useRef(null);
 
   const handlePrev = useCallback(() => {
     dispatch(changeLoginPage(1));
@@ -45,8 +46,10 @@ const LoginPassword = () => {
     );
 
     if (result.data.length === 0) {
+      alertRef.current.style.visibility = "visible";
       return;
     } else {
+      window.localStorage.setItem("id", inputId);
       setIsUnmount(true);
     }
   }, [isSubmitPassword, inputPassword, inputId]);
@@ -67,7 +70,7 @@ const LoginPassword = () => {
   );
 
   return (
-    <Wrapper>
+    <Wrapper ref={boxWrapper}>
       <PrevInfoWrapper>
         <PrevInfo>클론 코딩 입니다.</PrevInfo>
       </PrevInfoWrapper>
@@ -84,12 +87,16 @@ const LoginPassword = () => {
         handleEnter={handleEnter}
         type="password"
       ></LoginInput>
-      <Alert>계정 또는 패스워드가 맞지 않습니다. 다시 시도하십시오.</Alert>
+      <Alert ref={alertRef}>
+        계정 또는 패스워드가 맞지 않습니다. <br />
+        다시 시도하십시오.
+      </Alert>
       <UnmountEvent isUnmount={isUnmount}></UnmountEvent>
       <LoginButton
         inputValue={inputPassword}
         handleButton={handlePasswordButton}
         isSubmit={isSubmitPassword}
+        height={boxWrapper.current?.offsetHeight}
       ></LoginButton>
     </Wrapper>
   );
@@ -211,6 +218,12 @@ const PrevButton = styled.button`
   }
 `;
 
-const Alert = styled.div``;
+const Alert = styled.pre`
+  visibility: hidden;
+  color: rgba(255, 0, 0, 1);
+  font-size: 0.8rem;
+  margin-top: 5px;
+  line-height: 20px;
+`;
 
 export default LoginPassword;

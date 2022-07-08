@@ -87,6 +87,8 @@ const Icon = ({ svg = <FcFolder />, title, id, type }) => {
     );
   };
 
+  const handleDragEnter = (e) => {};
+
   return (
     <Wrapper
       data-id={`${id}`}
@@ -99,6 +101,7 @@ const Icon = ({ svg = <FcFolder />, title, id, type }) => {
       className="wallpaper-icon"
       draggable
       onClick={handleClick}
+      onDragEnter={() => console.log(title)}
     >
       <Tooltip xPos={tooltipxPos} yPos={tooltipyPos}>
         {title}

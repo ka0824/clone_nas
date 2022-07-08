@@ -4,7 +4,7 @@ import { BsArrowRight } from "react-icons/bs";
 // import { keyframes } from "@emotion/react";
 import styled, { keyframes, css } from "styled-components";
 
-const LoginButton = ({ handleButton, inputValue, isSubmit }) => {
+const LoginButton = ({ handleButton, inputValue, isSubmit, height }) => {
   return (
     <Wrapper onClick={handleButton} inputValue={inputValue} isSubmit={isSubmit}>
       <Icon>
@@ -44,7 +44,7 @@ const Wrapper = styled.div`
   align-items: center;
 
   position: absolute;
-  margin-top: 130px;
+  top: 550px;
   margin-left: 325px;
 
   :hover {

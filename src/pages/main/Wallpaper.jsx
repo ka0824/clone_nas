@@ -10,7 +10,7 @@ import {
 import DragIcons from "./../../components/drag/DragIcons";
 
 const Wallpaper = () => {
-  const shortcutList = useSelector((state) => state.shortcut);
+  const shortcutList = useSelector((state) => state.shortcut.list);
   const dragSelect = useSelector((state) => state.dragSelect);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [isDragIcons, setIsDragIcons] = useState(false);

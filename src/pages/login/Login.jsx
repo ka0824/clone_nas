@@ -15,11 +15,11 @@ const Wrapper = styled.div`
   height: 100%;
   background-image: url(https://images.pexels.com/photos/3293148/pexels-photo-3293148.jpeg);
   background-size: cover;
-  -webkit-filter: grayscale(60%);
+  /* -webkit-filter: grayscale(60%);
   -moz-filter: grayscale(60%);
   -o-filter: grayscale(60%);
   -ms-filter: grayscale(60%);
-  filter: grayscale(60%);
+  filter: grayscale(60%); */
 
   display: flex;
   justify-content: center;

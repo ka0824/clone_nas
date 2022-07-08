@@ -1,11 +1,18 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import TopMenu from "./../../components/menu/TopMenu";
 import Wallpaper from "./Wallpaper";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getShortcut } from "../../store/slice/shortcutSlice";
 
 const Main = () => {
   const modalList = useSelector((state) => state.modal.modalList);
+  const dispatch = useDispatch();
+  const id = window.localStorage.getItem("id");
+
+  useEffect(() => {
+    dispatch(getShortcut(id));
+  }, []);
 
   const handleRightClick = useCallback((e) => {
     e.preventDefault();
@@ -19,7 +26,16 @@ const Main = () => {
   }, [modalList]);
 
   return (
-    <Wrapper onContextMenu={handleRightClick}>
+    <Wrapper
+      onContextMenu={handleRightClick}
+      onDragOver={(e) => {
+        e.dataTransfer.dropEffect = "move";
+        e.preventDefault();
+      }}
+      onDragEnter={(e) => {
+        e.preventDefault();
+      }}
+    >
       {renderModal()}
       <TopMenu></TopMenu>
       <Wallpaper></Wallpaper>

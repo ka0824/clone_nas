@@ -346,6 +346,13 @@ const ModalTemplate = ({ id, icon, title, modalCnt }) => {
       onDragStart={handleWrapperStart}
       onDrag={handleWrapperDrag}
       onDragEnd={handleWrapperEnd}
+      onDragOver={(e) => {
+        e.dataTransfer.dropEffect = "none";
+        e.preventDefault();
+      }}
+      onDragEnter={(e) => {
+        e.preventDefault();
+      }}
       ref={wrapperRef}
       topSpace={topSpace}
       rightSpace={rightSpace}
@@ -768,9 +775,6 @@ const LeftSizeTag = styled.div`
   height: 100%;
 
   :hover {
-    cursor: ew-resize;
-  }
-  &:disabled {
     cursor: ew-resize;
   }
 `;
