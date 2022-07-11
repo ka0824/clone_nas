@@ -23,7 +23,6 @@ const ModalFolder = ({ id }) => {
   const posY = useRef(0);
   const dispatch = useDispatch();
   const modalList = useSelector((state) => state.modal.modalList);
-  // const [zIndex, setzIndex] = useState(1200);
   const zIndex = useSelector(
     (state) => state.modal.zIndexList.filter((el) => el.id === id)[0].zIndex
   );
@@ -32,26 +31,6 @@ const ModalFolder = ({ id }) => {
     e.stopPropagation();
 
     dispatch(removeModal(id));
-  };
-
-  const handleDragEnd = (event) => {
-    if (event.screenX === 0) {
-      return;
-    }
-
-    if (
-      event.nativeEvent.offsetX >= event.clientX ||
-      event.nativeEvent.offsetY >= event.clientY ||
-      event.clientX +
-        (event.target.parentNode.offsetWidth - event.nativeEvent.offsetX) >=
-        window.innerWidth ||
-      event.clientY +
-        (event.target.parentNode.offsetHeight - event.nativeEvent.offsetY) >=
-        window.innerHeight
-    ) {
-      event.target.parentNode.style.top = `50%`;
-      event.target.parentNode.style.left = `50%`;
-    }
   };
 
   const handleDragStart = (event) => {
@@ -69,75 +48,81 @@ const ModalFolder = ({ id }) => {
 
     // event.nativeEvent.offsetX > event.clientX
 
-    let topLimit;
-    let bottomLimit;
-    let leftLimit;
-    let rightLimit;
+    // let topLimit;
+    // let bottomLimit;
+    // let leftLimit;
+    // let rightLimit;
 
-    if (event.nativeEvent.offsetX >= event.clientX) {
-      leftLimit =
-        event.target.parentNode.offsetLeft + event.clientX - posX.current;
+    // if (event.nativeEvent.offsetX >= event.clientX) {
+    //   leftLimit =
+    //     event.target.parentNode.offsetLeft + event.clientX - posX.current;
 
-      event.target.parentNode.style.left = `${leftLimit + 5}px`;
-      event.target.parentNode.style.top = `${
-        event.target.parentNode.offsetTop + event.clientY - posY.current
-      }px`;
-      posY.current = event.clientY;
-      posX.current = event.clientX;
+    //   event.target.parentNode.style.left = `${leftLimit + 5}px`;
+    //   event.target.parentNode.style.top = `${
+    //     event.target.parentNode.offsetTop + event.clientY - posY.current
+    //   }px`;
+    //   posY.current = event.clientY;
+    //   posX.current = event.clientX;
+    // }
+
+    // if (event.nativeEvent.offsetY >= event.clientY) {
+    //   leftLimit =
+    //     event.target.parentNode.offsetTop + event.clientY - posY.current;
+
+    //   event.target.parentNode.style.left = `${
+    //     event.target.parentNode.offsetLeft + event.clientX - posX.current
+    //   }px`;
+    //   event.target.parentNode.style.top = `${leftLimit + 5}px`;
+    //   posY.current = event.clientY;
+    //   posX.current = event.clientX;
+    // }
+
+    // if (
+    //   event.clientX +
+    //     (event.target.parentNode.offsetWidth - event.nativeEvent.offsetX) >=
+    //   window.innerWidth
+    // ) {
+    //   leftLimit =
+    //     event.target.parentNode.offsetLeft + event.clientX - posX.current;
+
+    //   event.target.parentNode.style.left = `${leftLimit - 20}px`;
+    //   event.target.parentNode.style.top = `${
+    //     event.target.parentNode.offsetTop + event.clientY - posY.current
+    //   }px`;
+    //   posY.current = event.clientY;
+    //   posX.current = event.clientX;
+    // }
+
+    // if (
+    //   event.clientY +
+    //     (event.target.parentNode.offsetHeight - event.nativeEvent.offsetY) >=
+    //   window.innerHeight
+    // ) {
+    //   leftLimit =
+    //     event.target.parentNode.offsetTop + event.clientY - posY.current;
+
+    //   event.target.parentNode.style.left = `${
+    //     event.target.parentNode.offsetLeft + event.clientX - posX.current
+    //   }px`;
+    //   event.target.parentNode.style.top = `${leftLimit - 20}px`;
+    //   posY.current = event.clientY;
+    //   posX.current = event.clientX;
+    // }
+
+    // event.target.parentNode.style.left = `${
+    //   event.target.parentNode.offsetLeft + event.clientX - posX.current
+    // }px`;
+    // event.target.parentNode.style.top = `${
+    //   event.target.parentNode.offsetTop + event.clientY - posY.current
+    // }px`;
+    // posY.current = event.clientY;
+    // posX.current = event.clientX;
+  };
+
+  const handleDragEnd = (event) => {
+    if (event.screenX === 0) {
+      return;
     }
-
-    if (event.nativeEvent.offsetY >= event.clientY) {
-      leftLimit =
-        event.target.parentNode.offsetTop + event.clientY - posY.current;
-
-      event.target.parentNode.style.left = `${
-        event.target.parentNode.offsetLeft + event.clientX - posX.current
-      }px`;
-      event.target.parentNode.style.top = `${leftLimit + 5}px`;
-      posY.current = event.clientY;
-      posX.current = event.clientX;
-    }
-
-    if (
-      event.clientX +
-        (event.target.parentNode.offsetWidth - event.nativeEvent.offsetX) >=
-      window.innerWidth
-    ) {
-      leftLimit =
-        event.target.parentNode.offsetLeft + event.clientX - posX.current;
-
-      event.target.parentNode.style.left = `${leftLimit - 20}px`;
-      event.target.parentNode.style.top = `${
-        event.target.parentNode.offsetTop + event.clientY - posY.current
-      }px`;
-      posY.current = event.clientY;
-      posX.current = event.clientX;
-    }
-
-    if (
-      event.clientY +
-        (event.target.parentNode.offsetHeight - event.nativeEvent.offsetY) >=
-      window.innerHeight
-    ) {
-      leftLimit =
-        event.target.parentNode.offsetTop + event.clientY - posY.current;
-
-      event.target.parentNode.style.left = `${
-        event.target.parentNode.offsetLeft + event.clientX - posX.current
-      }px`;
-      event.target.parentNode.style.top = `${leftLimit - 20}px`;
-      posY.current = event.clientY;
-      posX.current = event.clientX;
-    }
-
-    event.target.parentNode.style.left = `${
-      event.target.parentNode.offsetLeft + event.clientX - posX.current
-    }px`;
-    event.target.parentNode.style.top = `${
-      event.target.parentNode.offsetTop + event.clientY - posY.current
-    }px`;
-    posY.current = event.clientY;
-    posX.current = event.clientX;
   };
 
   const handleClick = () => {
