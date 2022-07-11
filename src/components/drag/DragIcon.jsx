@@ -1,10 +1,18 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, forwardRef } from "react";
 import styled from "styled-components";
 import { FcPlus } from "react-icons/fc";
 
-const DragIcon = ({ xPos, yPos, svg, title }) => {
+const DragIcon = ({ svg, title, isDrag }, ref) => {
+  const handleMouseOver = (e) => {
+    e.preventDefault();
+    console.log("test2");
+    if (isDrag) {
+      console.log("test");
+    }
+  };
+
   return (
-    <Wrapper xPos={xPos} yPos={yPos}>
+    <Wrapper ref={ref} className="drag-icon">
       <IconsWrapper>
         {svg}
         <PlusIcon>
@@ -18,12 +26,14 @@ const DragIcon = ({ xPos, yPos, svg, title }) => {
 const Wrapper = styled.div`
   position: absolute;
   z-index: 999;
-  top: ${({ yPos }) => {
-    return `${yPos}px`;
+  /* top: ${({ yPos }) => {
+    return `${yPos + 10}px`;
   }};
   left: ${({ xPos }) => {
-    return `${xPos}px`;
-  }};
+    return `${xPos + 10}px`;
+  }}; */
+
+  top: 0;
   svg {
     width: 50px !important;
     height: 50px !important;
@@ -44,4 +54,4 @@ const PlusIcon = styled.div`
   }
 `;
 
-export default DragIcon;
+export default forwardRef(DragIcon);

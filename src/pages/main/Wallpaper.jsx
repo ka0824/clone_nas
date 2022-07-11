@@ -11,7 +11,7 @@ import DragIcons from "./../../components/drag/DragIcons";
 
 const Wallpaper = () => {
   const shortcutList = useSelector((state) => state.shortcut.list);
-  const dragSelect = useSelector((state) => state.dragSelect);
+  const dragSelect = useSelector((state) => state.dragSelect.multi);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [isDragIcons, setIsDragIcons] = useState(false);
   const [xPos, setxPos] = useState(0);
@@ -30,7 +30,7 @@ const Wallpaper = () => {
           title={el.title}
           id={el.id}
           type="wallpaper"
-          key={`menu-icon-${el.id}`}
+          key={`menu-icon-${el.title}`}
         ></Icon>
       );
     });

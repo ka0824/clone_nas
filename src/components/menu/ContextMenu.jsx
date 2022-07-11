@@ -9,7 +9,7 @@ import {
 
 const ContextMenu = ({ xPos, yPos, id, isOpen, type, svg, title }) => {
   const dispatch = useDispatch();
-  const dragSelect = useSelector((state) => state.dragSelect);
+  const dragSelect = useSelector((state) => state.dragSelect.multi);
 
   const handleRemove = useCallback(() => {
     if (dragSelect.length !== 0) {

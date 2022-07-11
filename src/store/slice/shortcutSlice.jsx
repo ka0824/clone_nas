@@ -43,13 +43,26 @@ const shortcutSlice = createSlice({
         return !action.payload.includes(el.id);
       });
     },
+    changeOrder: (state, action) => {
+      const fromIdx = state.list.findIndex(
+        (obj) => obj.id === parseInt(action.payload.dragFrom)
+      );
+      const toIdx = state.list.findIndex(
+        (obj) => obj.id === action.payload.dragTo
+      );
+
+      const temp = state.list.slice();
+      const fromData = temp.splice(fromIdx, 1)[0];
+      temp.splice(toIdx, 0, fromData);
+
+      state.list = temp;
+    },
   },
 });
 
 function* getShortcutSaga(action) {
   try {
     const list = yield call(fetchShortcutList, action.payload);
-    console.log(list);
     yield put(getShortcutS(list));
   } catch (error) {
     yield put(getShortcutE(error));
@@ -67,5 +80,6 @@ export const {
   getShortcut,
   getShortcutS,
   getShortcutE,
+  changeOrder,
 } = shortcutSlice.actions;
 export default shortcutSlice.reducer;

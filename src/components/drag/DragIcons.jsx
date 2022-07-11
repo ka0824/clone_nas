@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import { FcPlus } from "react-icons/fc";
 
 const DragIcons = ({ xPos, yPos }) => {
-  const shortcutList = useSelector((state) => state.shortcut);
-  const dragSelect = useSelector((state) => state.dragSelect);
+  const shortcutList = useSelector((state) => state.shortcut.list);
+  const dragSelect = useSelector((state) => state.dragSelect.multi);
 
   const renderIcons = useCallback(() => {
     const selected = shortcutList.filter((el) => dragSelect.includes(el.id));

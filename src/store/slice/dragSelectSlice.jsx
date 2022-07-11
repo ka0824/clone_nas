@@ -1,25 +1,41 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 
-const initialState = [];
+const initialState = {
+  dragTo: -1,
+  dragFrom: -1,
+  multi: [],
+};
 
 const dragSelectSlice = createSlice({
   name: "dragSelect",
   initialState,
   reducers: {
     addSelect: (state, action) => {
-      !state.includes(action.payload)
-        ? state.push(parseInt(action.payload))
+      !state.multi.includes(action.payload)
+        ? state.multi.push(parseInt(action.payload))
         : state;
     },
     removeSelect: (state, action) => {
-      return state.filter((el) => el !== action.payload);
+      state.multi = state.multi.filter((el) => el !== action.payload);
     },
     resetSelect: (state, action) => {
-      return [];
+      state.multi = [];
+    },
+    selectDragTo: (state, action) => {
+      state.dragTo = parseInt(action.payload);
+    },
+    selectDragFrom: (state, action) => {
+      state.dragFrom = parseInt(action.payload);
     },
   },
 });
 
-export const { resetSelect, addSelect, removeSelect } = dragSelectSlice.actions;
+export const {
+  resetSelect,
+  addSelect,
+  removeSelect,
+  selectDragTo,
+  selectDragFrom,
+} = dragSelectSlice.actions;
 export default dragSelectSlice.reducer;
