@@ -11,7 +11,8 @@ const ContextMenu = ({ xPos, yPos, id, isOpen, type, svg, title }) => {
   const dispatch = useDispatch();
   const dragSelect = useSelector((state) => state.dragSelect.multi);
 
-  const handleRemove = useCallback(() => {
+  const handleRemove = useCallback((e) => {
+    e.stopPropagation();
     if (dragSelect.length !== 0) {
       dispatch(removeMultiShortcut(dragSelect));
     } else {
@@ -39,7 +40,6 @@ const ContextMenu = ({ xPos, yPos, id, isOpen, type, svg, title }) => {
             <Item onClick={handleRemove}>바로가기 제거</Item>
           </>
         );
-        break;
 
       case "menu":
         return (
@@ -48,11 +48,9 @@ const ContextMenu = ({ xPos, yPos, id, isOpen, type, svg, title }) => {
             <Item onClick={handleAddShortcut}>바탕화면에 추가</Item>
           </>
         );
-        break;
 
       default:
         return null;
-        break;
     }
   }, []);
 
