@@ -5,6 +5,9 @@ Synology Nas 클론 코딩 입니다.
 
 ## 시연 영상
 
+
+![clone_nas](https://user-images.githubusercontent.com/79782594/222339248-8de6093a-f971-4601-b31d-0bfe52570eb0.gif)
+
 <br />
 
 ## 사용 스택
